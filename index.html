@@ -14,6 +14,8 @@
       <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
       <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
       <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+      <script src="http://cloud.github.com/downloads/wycats/handlebars.js/handlebars-1.0.0.beta.6.js"></script>
+            
 
       <style>
 	      body {
@@ -43,8 +45,8 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#login">Login</a></li>
+              <li><a href="#tables">Tables</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -52,16 +54,11 @@
     </div>
 
     <div class="container">
-
-
-
-      <h1>Bootstrap starter template</h1>
-      <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
-
+      <div id="content"></div>
     </div> <!-- /container -->
 
 
-    <div class="modal" id="loginModal">
+    <div class="modal" id="loginModal" style="display:none">
       <div class="modal-header">
         <h3>Enter your storage account and key</h3>
       </div>
@@ -89,17 +86,47 @@
       </div>
     </div>
 
+    <script id="table-template" type="text/x-handlebars-template">
+      <h2>Table Storage</h2>
+      <div class="row">
+        <div class="span2" id="tableList">
+
+        </div>
+        <div class="span10" id="entities">
+
+        </div>
+      </div>
+    </script>
+
+    <script id="tableList-template" type="text/x-handlebars-template">
+      <ul class="unstyled">
+        {{#each tables}}
+        <li><a href="#tables/{{this.TableName}}">{{this.TableName}}</a></li>
+        {{/each}}
+      </ul>
+    </script>
+
+    <script id="entity-template" type="text/x-handlebars-template">
+      <table class="table table-striped table-bordered table-condensed">
+        <tr><th>Updated</th><th>Partition Key</th><th>Row Key</th></tr>
+        {{#each entities}}
+          {{#entity this}}
+            {{this}}
+          {{/entity}}
+        {{/each}}
+      </table>
+    </script>
+
+    <script id="loading-template" type="text/x-handlebars-template">
+      <span class="label label-info">Loading...</span>
+    </script>
+
     <script>
-$(document).ready(function() {
-  $('#loginModal').modal({backdrop:true});
-});
-
-
 this.Two10 = new function() {
   
-  this.account = ""
+  this.account = "two10ra"
 
-  this.key = ""
+  this.key = "dmIMUY1mg/qPeOgGmCkO333L26cNcnUA1uMcSSOFMB3cB8LkdDkh02RaYTPLBL8qMqnqazqd6uMxI2bJJEnj0g=="
   
   this.login = function() {
     Two10.account = $("#storageAccount").val();
@@ -107,17 +134,69 @@ this.Two10 = new function() {
     $('#loginModal').modal('hide');
   }
 
+  this.query = function(path, callback){
+    console.log("querying " + path)    
+    jQuery.ajax(path, {
+      cache:false,
+      headers: { account: Two10.account, key: Two10.key},
+      success : callback
+    });
+  }
 
+  this.view = function(template, data, target){
+    console.log("running view onto " + target);
+    console.log(data);
+    $(target).html(template(data));
+  }
+
+
+
+  this.Templates = new function(){
+
+    this.tableTemplate = Handlebars.compile($("#table-template").html()),
+    this.tableListTemplate = Handlebars.compile($("#tableList-template").html()),
+    this.entityTemplate = Handlebars.compile($("#entity-template").html())
+    this.loadingTemplate = Handlebars.compile($("#loading-template").html())
+
+  }
 }
+
+
+
+Handlebars.registerHelper('entity', function(item, options) {
+  var out = "<tr>";
+
+  for(var prop in item){
+    if (prop != "id" && prop != "link" && prop != "etag") {
+      out = out + "<td>" + item[prop] + "</td>"
+    }
+  }
+  return out + "</tr>";
+});
 
 
 var AppRouter = Backbone.Router.extend({
   routes: {
+    "login" : "login",
     "tables" : "tables",
+    "tables/*table" : "table",
     "*actions": "defaultRoute"
   },
+  login:function(){
+    $('#loginModal').modal({backdrop:true});
+  },
   tables: function(){
-    alert("tables-route");
+    Two10.view(Two10.Templates.tableTemplate, {}, "#content");
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#tableList");    
+    Two10.query("/tables/", function(data){
+      Two10.view(Two10.Templates.tableListTemplate, {tables:data}, "#tableList");
+    });
+  },
+  table: function(table){
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#entities");
+    Two10.query("/tables/" + table, function(data){
+      Two10.view(Two10.Templates.entityTemplate, {entities:data}, "#entities");
+    });
   },
   defaultRoute: function( actions ){
     alert( actions ); 

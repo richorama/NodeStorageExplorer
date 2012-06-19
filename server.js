@@ -16,14 +16,14 @@ app.get('/hello', function(req, res){
 });
 
 app.get('/tables', function(req, res){
-	var tableService = azure.createTableService(azureAccount, azureKey);
+	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	tableService.queryTables(function(error, queryTableResult, response){
 		res.json(queryTableResult);	
 	});
 });
 
 app.get('/tables/:table', function(req, res){
-	var tableService = azure.createTableService(azureAccount, azureKey);
+	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	var query = azure.TableQuery.select().from(req.params.table)
 	tableService.queryEntities(query, function(error, queryTableResult, response){
 		res.json(queryTableResult);	
