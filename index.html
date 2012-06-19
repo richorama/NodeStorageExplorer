@@ -47,6 +47,7 @@
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#login">Login</a></li>
               <li><a href="#tables">Tables</a></li>
+              <li><a href="#containers">Blobs</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -130,7 +131,7 @@
     </script>
 
     <script id="tableSearch-template" type="text/x-handlebars-template">
-      <h3>{{table}}</h3>
+      <h3>{{table}} Entities</h3>
       <div style="float:right">
         <a class="btn" onclick='app_router.table("{{table}}","{{query}}");'>Reload</a>
       </div>
@@ -141,6 +142,51 @@
         </div>
       </div>
     </script>
+
+    <script id="blob-template" type="text/x-handlebars-template">
+      <h2>Blob Storage</h2>
+      <div class="row">
+        <div class="span2" id="containerList">
+
+        </div>
+        <div class="span10">
+          <div id="blobList">
+
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script id="containerList-template" type="text/x-handlebars-template">
+      <h3>Containers</h3>
+      <ul class="unstyled">
+        {{#each containers}}
+        <li><a href="#containers/{{this.name}}">{{this.name}}</a></li>
+        {{/each}}
+      </ul>
+    </script>
+
+    <script id="blobList-template" type="text/x-handlebars-template">
+      <h3>{{container}} Blobs</h3>
+
+      <table class="table table-striped table-bordered table-condensed">
+        <tr>
+          <th>Name</th>
+          <th>Blob Type</th>
+          <th>Content Length</th>
+          <th>Content Type</th>
+        </tr>
+        {{#each blobs}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{properties.BlobType}}</td>
+          <td>{{properties.Content-Length}}</td>
+          <td>{{properties.Content-Type}}</td>
+        </tr>
+        {{/each}}
+      </table>
+    </script>
+
 
     <script>
 this.Two10 = new function() {
@@ -178,9 +224,10 @@ this.Two10 = new function() {
     this.entityTemplate = Handlebars.compile($("#entity-template").html())
     this.loadingTemplate = Handlebars.compile($("#loading-template").html()),
     this.homeTemplate = Handlebars.compile($("#home-template").html()),
-    this.tableSearchTemplate = Handlebars.compile($("#tableSearch-template").html())
-    
-
+    this.tableSearchTemplate = Handlebars.compile($("#tableSearch-template").html()),
+    this.blobTemplate = Handlebars.compile($("#blob-template").html()),
+    this.containerListTemplate = Handlebars.compile($("#containerList-template").html()),
+    this.blobListTemplate = Handlebars.compile($("#blobList-template").html())
   }
 }
 
@@ -238,6 +285,8 @@ var AppRouter = Backbone.Router.extend({
     "tables/:table" : "table",
     "tables/:table/" : "table",
     "tables/:table/:query" : "table",
+    "containers" : "containers",
+    "containers/:container": "container",
     "*actions": "home"
   },
   login:function(){
@@ -261,6 +310,19 @@ var AppRouter = Backbone.Router.extend({
     Two10.query(path, function(data){
       Two10.view(Two10.Templates.entityTemplate, {entities:data}, "#entities");
     });
+  },
+  containers: function(){
+    Two10.view(Two10.Templates.blobTemplate, {}, "#content");  
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#containerList");       
+    Two10.query("/containers/", function(data){
+      Two10.view(Two10.Templates.containerListTemplate, {containers:data}, "#containerList");
+    });  
+  },
+  container: function(container){
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#blobList");       
+    Two10.query("/containers/" + container, function(data){
+      Two10.view(Two10.Templates.blobListTemplate, {blobs:data, container:container}, "#blobList");
+    });  
   },
   home:function(){
     Two10.view(Two10.Templates.homeTemplate, {}, "#content");

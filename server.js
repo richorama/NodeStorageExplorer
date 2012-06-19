@@ -33,5 +33,19 @@ app.get('/tables/:table/:query?', function(req, res){
 	});
 });
 
+app.get('/containers', function(req, res){
+	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
+	blobService.listContainers(function(errors, containers, nextMarker, response){
+		res.json(containers);	
+	});
+});
+
+app.get('/containers/:blob', function(req, res){
+	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
+	blobService.listBlobs(req.params.blob, function(errors, blobs, nextMarker, response){
+		res.json(blobs);	
+	});
+});
+
 
 app.listen(3000);
