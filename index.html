@@ -92,13 +92,19 @@
         <div class="span2" id="tableList">
 
         </div>
-        <div class="span10" id="entities">
+        <div class="span10">
+          <div id="tableSearch">
+            
+          </div>
+          <div id="entities">
 
+          </div>
         </div>
       </div>
     </script>
 
     <script id="tableList-template" type="text/x-handlebars-template">
+      <h3>Tables</h3>
       <ul class="unstyled">
         {{#each tables}}
         <li><a href="#tables/{{this.TableName}}">{{this.TableName}}</a></li>
@@ -116,6 +122,24 @@
 
     <script id="loading-template" type="text/x-handlebars-template">
       <span class="label label-info">Loading...</span>
+    </script>
+
+    <script id="home-template" type="text/x-handlebars-template">
+      <h2>NodeStorageExplorer</h2>
+      <a href="#tables">Explore tables</a>
+    </script>
+
+    <script id="tableSearch-template" type="text/x-handlebars-template">
+      <h3>{{table}}</h3>
+      <div style="float:right">
+        <a class="btn" onclick='app_router.table("{{table}}","{{query}}");'>Reload</a>
+      </div>
+      <div class="controls">
+        <div class="input-append">
+          <input id="searchText" value="{{query}}" class="span4" size="16" type="text"/><button href="javascript:void(0);" class="btn" onclick="app_router.table('{{table}}', $('#searchText').val());" >Query</button>
+
+        </div>
+      </div>
     </script>
 
     <script>
@@ -147,13 +171,15 @@ this.Two10 = new function() {
   }
 
 
-
   this.Templates = new function(){
 
     this.tableTemplate = Handlebars.compile($("#table-template").html()),
     this.tableListTemplate = Handlebars.compile($("#tableList-template").html()),
     this.entityTemplate = Handlebars.compile($("#entity-template").html())
-    this.loadingTemplate = Handlebars.compile($("#loading-template").html())
+    this.loadingTemplate = Handlebars.compile($("#loading-template").html()),
+    this.homeTemplate = Handlebars.compile($("#home-template").html()),
+    this.tableSearchTemplate = Handlebars.compile($("#tableSearch-template").html())
+    
 
   }
 }
@@ -161,12 +187,12 @@ this.Two10 = new function() {
 
 function compareObjects(obj1, obj2){
   for (var prop in obj1){
-    if (!obj2[prop]){
+    if (!obj2.hasOwnProperty(prop)){
       return false;
     }
   }
   for (var prop in obj2){
-    if (!obj1[prop]){
+    if (!obj1.hasOwnProperty(prop)){
       return false;
     }
   }
@@ -181,7 +207,7 @@ Handlebars.registerHelper('entity', function(items, options) {
 
     var item = items[i];
     if (!lastitem || !compareObjects(lastitem, item)){
-      out = out + "<tr>";
+      out = out + "<tr><th></th>";
       for(var prop in item){
         if (prop != "id" && prop != "link" && prop != "etag") {
           out = out + "<th>" + prop + "</th>"
@@ -190,7 +216,8 @@ Handlebars.registerHelper('entity', function(items, options) {
       out = out + "</tr>";      
     }
 
-    out = out + "<tr>";
+    out = out + "<tr><td><a>Delete</a></td>";
+
     for(var prop in item){
       if (prop != "id" && prop != "link" && prop != "etag") {
         out = out + "<td>" + item[prop] + "</td>"
@@ -208,8 +235,10 @@ var AppRouter = Backbone.Router.extend({
   routes: {
     "login" : "login",
     "tables" : "tables",
-    "tables/*table" : "table",
-    "*actions": "defaultRoute"
+    "tables/:table" : "table",
+    "tables/:table/" : "table",
+    "tables/:table/:query" : "table",
+    "*actions": "home"
   },
   login:function(){
     $('#loginModal').modal({backdrop:true});
@@ -221,14 +250,20 @@ var AppRouter = Backbone.Router.extend({
       Two10.view(Two10.Templates.tableListTemplate, {tables:data}, "#tableList");
     });
   },
-  table: function(table){
+  table: function(table, query){
+    Two10.view(Two10.Templates.tableSearchTemplate, {table:table, query:query}, "#tableSearch");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#entities");
-    Two10.query("/tables/" + table, function(data){
+
+    var path = "/tables/" + table;
+    if (query){
+      path = path + "/" + query;
+    }
+    Two10.query(path, function(data){
       Two10.view(Two10.Templates.entityTemplate, {entities:data}, "#entities");
     });
   },
-  defaultRoute: function( actions ){
-    alert( actions ); 
+  home:function(){
+    Two10.view(Two10.Templates.homeTemplate, {}, "#content");
   }
 });
 var app_router = new AppRouter;

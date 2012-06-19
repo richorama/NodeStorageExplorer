@@ -22,9 +22,12 @@ app.get('/tables', function(req, res){
 	});
 });
 
-app.get('/tables/:table', function(req, res){
+app.get('/tables/:table/:query?', function(req, res){
 	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	var query = azure.TableQuery.select().from(req.params.table)
+	if (req.params.query){
+		query = query.where(req.params.query);
+	}
 	tableService.queryEntities(query, function(error, queryTableResult, response){
 		res.json(queryTableResult);	
 	});
