@@ -59,7 +59,7 @@
     </div> <!-- /container -->
 
 
-    <div class="modal" id="loginModal" style="display:none">
+    <div class="modal fade" id="loginModal" style="display:none">
       <div class="modal-header">
         <h3>Enter your storage account and key</h3>
       </div>
@@ -201,14 +201,15 @@
     <script>
 this.Two10 = new function() {
   
-  this.account = "two10ra"
+  this.account = ""
 
-  this.key = "dmIMUY1mg/qPeOgGmCkO333L26cNcnUA1uMcSSOFMB3cB8LkdDkh02RaYTPLBL8qMqnqazqd6uMxI2bJJEnj0g=="
+  this.key = ""
   
   this.login = function() {
     Two10.account = $("#storageAccount").val();
     Two10.key = $("#storageKey").val();
     $('#loginModal').modal('hide');
+    app_router.navigate("#/", {trigger: true, replace: true});
   }
 
   this.query = function(path, callback){
@@ -300,7 +301,7 @@ var AppRouter = Backbone.Router.extend({
     "*actions": "home"
   },
   login:function(){
-    $('#loginModal').modal({backdrop:true});
+    $('#loginModal').modal({backdrop:true, keyboard:false});
   },
   tables: function(){
     Two10.view(Two10.Templates.tableTemplate, {}, "#content");
@@ -341,6 +342,8 @@ var AppRouter = Backbone.Router.extend({
 var app_router = new AppRouter;
 Backbone.history.start();
 
+
+app_router.login();
 
     </script>
 
