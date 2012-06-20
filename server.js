@@ -47,5 +47,19 @@ app.get('/containers/:blob', function(req, res){
 	});
 });
 
+app.get('/queues', function(req, res){
+	var blobService = azure.createQueueService(req.headers.account, req.headers.key);
+	blobService.listQueues(function(errors, queues, nextMarker, response){
+		res.json(queues);	
+	});
+});
+
+app.get('/queues/:queue', function(req, res){
+	var blobService = azure.createQueueService(req.headers.account, req.headers.key);
+	blobService.getQueueMetadata(req.params.queue, function(errors, queueResult, response){
+		res.json(queueResult);	
+	});
+});
+
 
 app.listen(process.env.port || 210);

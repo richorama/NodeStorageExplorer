@@ -48,6 +48,7 @@
               <li><a href="#login">Login</a></li>
               <li><a href="#tables">Tables</a></li>
               <li><a href="#containers">Blobs</a></li>
+              <li><a href="#queues">Queues</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -132,6 +133,7 @@
       <h2>NodeStorageExplorer</h2>
       <a style="font-size:20px;" class="btn btn-primary btn-large" href="#tables">Table Storage</a>
       <a style="font-size:20px;" class="btn btn-primary btn-large" href="#containers">Blob Storage</a>
+      <a style="font-size:20px;" class="btn btn-primary btn-large" href="#queues">Cloud Queues</a>
     </script>
 
     <script id="tableSearch-template" type="text/x-handlebars-template">
@@ -197,6 +199,36 @@
       </table>
     </script>
 
+    <script id="queue-template" type="text/x-handlebars-template">
+      <h2>Cloud Queues</h2>
+      <div class="row">
+        <div class="span2" id="queueList">
+
+        </div>
+        <div class="span10">
+          <div id="queueDetails">
+
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script id="queueList-template" type="text/x-handlebars-template">
+      <div style="float:right">
+        <a href="javascript:void(0);" onclick='app_router.queues();'>Reload</a>
+      </div>      
+      <h3>Queues</h3>
+      <ul class="nav nav-tabs nav-stacked">
+        {{#each queues}}
+        <li><a href="#queues/{{this.name}}">{{this.name}}</a></li>
+        {{/each}}
+      </ul>
+    </script>
+
+    <script id="queueDetails-template" type="text/x-handlebars-template">
+      <h3>{{name}} Details</h3>
+      Approximate message count = {{details.approximatemessagecount}}
+    </script>
 
     <script>
 this.Two10 = new function() {
@@ -238,7 +270,10 @@ this.Two10 = new function() {
     this.tableSearchTemplate = Handlebars.compile($("#tableSearch-template").html()),
     this.blobTemplate = Handlebars.compile($("#blob-template").html()),
     this.containerListTemplate = Handlebars.compile($("#containerList-template").html()),
-    this.blobListTemplate = Handlebars.compile($("#blobList-template").html())
+    this.blobListTemplate = Handlebars.compile($("#blobList-template").html()),
+    this.queueTemplate = Handlebars.compile($("#queue-template").html()),
+    this.queueListTemplate = Handlebars.compile($("#queueList-template").html()),
+    this.queueDetailsTemplate = Handlebars.compile($("#queueDetails-template").html())  
   }
 }
 
@@ -298,6 +333,8 @@ var AppRouter = Backbone.Router.extend({
     "tables/:table/:query" : "table",
     "containers" : "containers",
     "containers/:container": "container",
+    "queues" : "queues",    
+    "queues/:queue" : "queue",    
     "*actions": "home"
   },
   login:function(){
@@ -337,6 +374,19 @@ var AppRouter = Backbone.Router.extend({
   },
   home:function(){
     Two10.view(Two10.Templates.homeTemplate, {}, "#content");
+  },
+  queues: function(){
+    Two10.view(Two10.Templates.queueTemplate, {}, "#content");  
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#queueList");       
+    Two10.query("/queues/", function(data){
+      Two10.view(Two10.Templates.queueListTemplate, {queues:data}, "#queueList");
+    });  
+  },  
+  queue: function(queue){
+    Two10.view(Two10.Templates.loadingTemplate, {}, "#queueDetails");       
+    Two10.query("/queues/" + queue, function(data){
+      Two10.view(Two10.Templates.queueDetailsTemplate, {details:data, name:queue}, "#queueDetails");
+    });  
   }
 });
 var app_router = new AppRouter;
