@@ -10,11 +10,6 @@ app.get('/', function(req, res){
 	res.sendfile('index.html');
 });
 
-
-app.get('/hello', function(req, res){
-	res.json({greeting : 'hello world'});
-});
-
 app.get('/tables', function(req, res){
 	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	tableService.queryTables(function(error, queryTableResult, response){
@@ -48,18 +43,30 @@ app.get('/containers/:blob', function(req, res){
 });
 
 app.get('/queues', function(req, res){
-	var blobService = azure.createQueueService(req.headers.account, req.headers.key);
-	blobService.listQueues(function(errors, queues, nextMarker, response){
+	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
+	queueService.listQueues(function(errors, queues, nextMarker, response){
 		res.json(queues);	
 	});
 });
 
 app.get('/queues/:queue', function(req, res){
-	var blobService = azure.createQueueService(req.headers.account, req.headers.key);
-	blobService.getQueueMetadata(req.params.queue, function(errors, queueResult, response){
+	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
+	queueService.getQueueMetadata(req.params.queue, function(errors, queueResult, response){
 		res.json(queueResult);	
 	});
 });
 
+app.post('/queues/:queue',function(req, res){
+	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
+	queueService.createQueueIfNotExists(req.params.queue, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.log(error);
+	    	res.json({result:error});
+	    }
+	});
+});
 
 app.listen(process.env.port || 210);

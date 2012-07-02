@@ -200,6 +200,9 @@
     </script>
 
     <script id="queue-template" type="text/x-handlebars-template">
+      <div style="float:right" class="controls"><div class="input-append">
+        <input id="queueName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createQueue($('#queueName').val());" class="btn btn-primary">Create Queue</a>
+      </div></div>
       <h2>Cloud Queues</h2>
       <div class="row">
         <div class="span2" id="queueList">
@@ -241,6 +244,11 @@ this.Two10 = new function() {
     Two10.account = $("#storageAccount").val();
     Two10.key = $("#storageKey").val();
     $('#loginModal').modal('hide');
+    if (localStorage){
+      localStorage.setItem("account", Two10.account);
+      localStorage.setItem("key", Two10.key);
+    }
+
     app_router.navigate("#/", {trigger: true, replace: true});
   }
 
@@ -248,6 +256,17 @@ this.Two10 = new function() {
     console.log("querying " + path)    
     jQuery.ajax(path, {
       cache:false,
+      headers: { account: Two10.account, key: Two10.key},
+      success : callback
+    });
+  }
+
+  this.post = function(path, data, callback){
+    console.log("posting " + path);
+    jQuery.ajax(path, {
+      cache:false,
+      type:"POST",
+      data: data,
       headers: { account: Two10.account, key: Two10.key},
       success : callback
     });
@@ -338,6 +357,11 @@ var AppRouter = Backbone.Router.extend({
     "*actions": "home"
   },
   login:function(){
+    if (localStorage){
+      $("#storageAccount").val(localStorage.getItem("account"));
+      $("#storageKey").val(localStorage.getItem("key"));
+    }
+
     $('#loginModal').modal({backdrop:"static", keyboard:false});
   },
   tables: function(){
@@ -387,7 +411,17 @@ var AppRouter = Backbone.Router.extend({
     Two10.query("/queues/" + queue, function(data){
       Two10.view(Two10.Templates.queueDetailsTemplate, {details:data, name:queue}, "#queueDetails");
     });  
+  },
+  createQueue: function(queueName){
+    Two10.post("/queues/" + queueName, {}, function(response){
+      Two10.query("/queues/", function(data){
+        Two10.view(Two10.Templates.queueListTemplate, {queues:data}, "#queueList");
+        $('#queueName').val("");
+      });  
+    });
+
   }
+
 });
 var app_router = new AppRouter;
 Backbone.history.start();
