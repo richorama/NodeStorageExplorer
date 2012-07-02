@@ -69,4 +69,17 @@ app.post('/queues/:queue',function(req, res){
 	});
 });
 
+app.delete('/queues/:queue',function(req, res){
+	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
+	queueService.deleteQueue(req.params.queue, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.log(error);
+	    	res.json({result:error});
+	    }
+	});
+});
+
 app.listen(process.env.port || 210);

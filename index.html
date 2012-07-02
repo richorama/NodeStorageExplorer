@@ -200,10 +200,12 @@
     </script>
 
     <script id="queue-template" type="text/x-handlebars-template">
-      <div style="float:right" class="controls"><div class="input-append">
+      <div class="row">
+      <h2 style="float:left; padding-right:30px;">Cloud Queues</h2>
+      <div style="float:right" style="float:right" class="controls"><div class="input-append">
         <input id="queueName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createQueue($('#queueName').val());" class="btn btn-primary">Create Queue</a>
       </div></div>
-      <h2>Cloud Queues</h2>
+      </div>
       <div class="row">
         <div class="span2" id="queueList">
 
@@ -230,7 +232,8 @@
 
     <script id="queueDetails-template" type="text/x-handlebars-template">
       <h3>{{name}} Details</h3>
-      Approximate message count = {{details.approximatemessagecount}}
+      Approximate message count = {{details.approximatemessagecount}}<br/>
+      <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')">Delete Queue</a>
     </script>
 
     <script>
@@ -272,6 +275,16 @@ this.Two10 = new function() {
     });
   }
 
+  this.delete = function(path, callback){
+    console.log("deleting " + path);
+    jQuery.ajax(path, {
+      cache:false,
+      type:"DELETE",
+      headers: { account: Two10.account, key: Two10.key},
+      success : callback
+    });
+  }
+
   this.view = function(template, data, target){
     console.log("running view onto " + target);
     console.log(data);
@@ -292,7 +305,8 @@ this.Two10 = new function() {
     this.blobListTemplate = Handlebars.compile($("#blobList-template").html()),
     this.queueTemplate = Handlebars.compile($("#queue-template").html()),
     this.queueListTemplate = Handlebars.compile($("#queueList-template").html()),
-    this.queueDetailsTemplate = Handlebars.compile($("#queueDetails-template").html())  
+    this.queueDetailsTemplate = Handlebars.compile($("#queueDetails-template").html()),
+    this.emptyTemplate = Handlebars.compile("")  
   }
 }
 
@@ -419,7 +433,14 @@ var AppRouter = Backbone.Router.extend({
         $('#queueName').val("");
       });  
     });
-
+  },
+  deleteQueue: function(queueName){
+    Two10.view(Two10.Templates.emptyTemplate, {}, "#queueDetails");
+    Two10.delete("/queues/" + queueName, function(response){
+      Two10.query("/queues/", function(data){
+        Two10.view(Two10.Templates.queueListTemplate, {queues:data}, "#queueList");
+      });  
+    });
   }
 
 });
