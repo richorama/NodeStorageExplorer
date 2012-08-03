@@ -1,11 +1,6 @@
 var azure = require('azure')
 var app = require('express').createServer();
 
-var azureAccount = "two10ra";
-var azureKey = "dmIMUY1mg/qPeOgGmCkO333L26cNcnUA1uMcSSOFMB3cB8LkdDkh02RaYTPLBL8qMqnqazqd6uMxI2bJJEnj0g==";
-
-
-
 app.get('/', function(req, res){
 	res.sendfile('index.html');
 });
