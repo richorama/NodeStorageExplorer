@@ -342,7 +342,7 @@ Handlebars.registerHelper('entity', function(items, options) {
       out = out + "</tr>";      
     }
 
-    out = out + "<tr><td><a>Delete</a></td>";
+    out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'>Delete</a></td>";
 
     for(var prop in item){
       if (prop != "id" && prop != "link" && prop != "etag") {
@@ -356,6 +356,9 @@ Handlebars.registerHelper('entity', function(items, options) {
   return out;
 });
 
+var context = {
+  lastTable: ""
+};
 
 var AppRouter = Backbone.Router.extend({
   routes: {
@@ -386,6 +389,7 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   table: function(table, query){
+    context.lastTable = table;
     Two10.view(Two10.Templates.tableSearchTemplate, {table:table, query:query}, "#tableSearch");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#entities");
 
@@ -440,6 +444,12 @@ var AppRouter = Backbone.Router.extend({
       Two10.query("/queues/", function(data){
         Two10.view(Two10.Templates.queueListTemplate, {queues:data}, "#queueList");
       });  
+    });
+  },
+  deleteEntity: function(tablename, pk, rk){
+    Two10.delete("/entities/" + tablename + "/" + pk + "/" + rk, function(response){
+      $("#" + pk + "-" + rk).remove();
+
     });
   }
 

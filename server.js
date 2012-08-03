@@ -77,4 +77,17 @@ app.delete('/queues/:queue',function(req, res){
 	});
 });
 
+app.delete('/entities/:table/:pk/:rk',function(req, res){
+	var tableService = azure.createTableService(req.headers.account, req.headers.key);
+	tableService.deleteEntity(req.params.table, {PartitionKey: req.params.pk, RowKey: req.params.rk}, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.log(error);
+	    	res.json({result:error});
+	    }
+	});
+});
+
 app.listen(process.env.port || 210);
