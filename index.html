@@ -312,17 +312,15 @@ this.Two10 = new function() {
 
 
 function compareObjects(obj1, obj2){
+  props1 = "";
+  props2 = "";
   for (var prop in obj1){
-    if (!obj2.hasOwnProperty(prop)){
-      return false;
-    }
+    props1 += prop + ",";
   }
   for (var prop in obj2){
-    if (!obj1.hasOwnProperty(prop)){
-      return false;
-    }
+    props2 += prop + ",";
   }
-  return true;
+  return props1 == props2;
 }
 
 
