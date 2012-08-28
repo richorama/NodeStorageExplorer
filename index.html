@@ -333,7 +333,7 @@ Handlebars.registerHelper('entity', function(items, options) {
     if (!lastitem || !compareObjects(lastitem, item)){
       out = out + "<tr><th></th>";
       for(var prop in item){
-        if (prop != "id" && prop != "link" && prop != "etag") {
+        if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated") {
           out = out + "<th>" + prop + "</th>"
         }
       }
