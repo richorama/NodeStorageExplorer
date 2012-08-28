@@ -343,7 +343,7 @@ Handlebars.registerHelper('entity', function(items, options) {
     out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'>Delete</a></td>";
 
     for(var prop in item){
-      if (prop != "id" && prop != "link" && prop != "etag") {
+      if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated") {
         out = out + "<td>" + item[prop] + "</td>"
       }
     }
