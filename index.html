@@ -139,6 +139,7 @@
     <script id="tableSearch-template" type="text/x-handlebars-template">
       <h3>{{table}} Entities</h3>
       <div style="float:right">
+        <a href="javascript:void(0);" onclick='app_router.deleteTable("{{table}}");'>Delete</a> 
         <a href="javascript:void(0);" onclick='app_router.table("{{table}}","{{query}}");'>Reload</a>
       </div>
       <div class="controls">
@@ -369,6 +370,7 @@ var AppRouter = Backbone.Router.extend({
     "containers/:container": "container",
     "queues" : "queues",    
     "queues/:queue" : "queue",    
+    "delete/tables/:table": "deleteTable",
     "*actions": "home"
   },
   login:function(){
@@ -448,6 +450,11 @@ var AppRouter = Backbone.Router.extend({
     Two10.delete("/entities/" + tablename + "/" + pk + "/" + rk, function(response){
       $("#" + pk + "-" + rk).remove();
 
+    });
+  },
+  deleteTable: function(tablename){
+    Two10.delete("/tables/" + tablename, function(response){
+      app_router.tables();
     });
   }
 

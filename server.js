@@ -90,4 +90,18 @@ app.delete('/entities/:table/:pk/:rk',function(req, res){
 	});
 });
 
+app.delete('/tables/:table',function(req, res){
+	var tableService = azure.createTableService(req.headers.account, req.headers.key);
+	tableService.deleteTable(req.params.table, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.log(error);
+	    	res.json({result:error});
+	    }
+	});
+});
+
+
 app.listen(process.env.port || 210);
