@@ -8,6 +8,9 @@ app.get('/', function(req, res){
 app.get('/tables', function(req, res){
 	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	tableService.queryTables(function(error, queryTableResult, response){
+		if (error){
+			console.error(error);
+		}		
 		res.json(queryTableResult);	
 	});
 });
@@ -19,34 +22,49 @@ app.get('/tables/:table/:query?', function(req, res){
 		query = query.where(req.params.query);
 	}
 	tableService.queryEntities(query, function(error, queryTableResult, response){
+		if (error){
+			console.error(error);
+		}		
 		res.json(queryTableResult);	
 	});
 });
 
 app.get('/containers', function(req, res){
 	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
-	blobService.listContainers(function(errors, containers, nextMarker, response){
+	blobService.listContainers(function(error, containers, nextMarker, response){
+		if (error){
+			console.error(error);
+		}		
 		res.json(containers);	
 	});
 });
 
 app.get('/containers/:blob', function(req, res){
 	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
-	blobService.listBlobs(req.params.blob, function(errors, blobs, nextMarker, response){
+	blobService.listBlobs(req.params.blob, function(error, blobs, nextMarker, response){
+		if (error){
+			console.error(error);
+		}		
 		res.json(blobs);	
 	});
 });
 
 app.get('/queues', function(req, res){
 	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
-	queueService.listQueues(function(errors, queues, nextMarker, response){
+	queueService.listQueues(function(error, queues, nextMarker, response){
+		if (error){
+			console.error(error);
+		}
 		res.json(queues);	
 	});
 });
 
 app.get('/queues/:queue', function(req, res){
 	var queueService = azure.createQueueService(req.headers.account, req.headers.key);
-	queueService.getQueueMetadata(req.params.queue, function(errors, queueResult, response){
+	queueService.getQueueMetadata(req.params.queue, function(error, queueResult, response){
+		if (error){
+			console.error(error);
+		}
 		res.json(queueResult);	
 	});
 });
@@ -58,7 +76,7 @@ app.post('/queues/:queue',function(req, res){
 	        res.json({result:"ok"});
 	    }
 	    else{
-	    	console.log(error);
+	    	console.error(error);
 	    	res.json({result:error});
 	    }
 	});
@@ -71,7 +89,7 @@ app.delete('/queues/:queue',function(req, res){
 	        res.json({result:"ok"});
 	    }
 	    else{
-	    	console.log(error);
+	    	console.error(error);
 	    	res.json({result:error});
 	    }
 	});
@@ -84,7 +102,7 @@ app.delete('/entities/:table/:pk/:rk',function(req, res){
 	        res.json({result:"ok"});
 	    }
 	    else{
-	    	console.log(error);
+	    	console.error(error);
 	    	res.json({result:error});
 	    }
 	});
@@ -97,11 +115,10 @@ app.delete('/tables/:table',function(req, res){
 	        res.json({result:"ok"});
 	    }
 	    else{
-	    	console.log(error);
+	    	console.error(error);
 	    	res.json({result:error});
 	    }
 	});
 });
-
 
 app.listen(process.env.port || 210);
