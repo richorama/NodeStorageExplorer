@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/richorama/NodeStorageExplorer.png)](http://travis-ci.org/richorama/NodeStorageExplorer)
+
 NodeStorageExplorer
 ===================
 
