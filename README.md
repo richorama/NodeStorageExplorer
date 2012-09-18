@@ -1,7 +1,7 @@
 NodeStorageExplorer
 ===================
 
-An Azure Cloud Storage explorer written in Node.js, which can be hosted as an Azure Website.
+A Windows Azure Cloud Storage explorer written in Node.js, which can be hosted as an Azure Website.
 
 About
 -----
