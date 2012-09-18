@@ -1,0 +1,25 @@
+info it worked if it ends with ok
+verbose cli [ 'c:\\PROGRAM FILES (X86)\\NODEJS\\node.exe',
+verbose cli   'c:\\PROGRAM FILES (X86)\\NODEJS\\node_modules\\npm\\bin\\npm-cli.js',
+verbose cli   'test' ]
+info using npm@1.1.16
+info using node@v0.6.15
+verbose config file C:\Users\richard.astbury\.npmrc
+verbose config file c:\PROGRAM FILES (X86)\NODEJS\etc\npmrc
+verbose config file c:\PROGRAM FILES (X86)\NODEJS\node_modules\npm\npmrc
+ERR! Error: ENOENT, open 'd:\git\NodeStorageExplorer\package.json'
+ERR! You may report this log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Windows_NT 6.2.9200
+ERR! command "c:\\PROGRAM FILES (X86)\\NODEJS\\node.exe" "c:\\PROGRAM FILES (X86)\\NODEJS\\node_modules\\npm\\bin\\npm-cli.js" "test"
+ERR! cwd d:\git\NodeStorageExplorer
+ERR! node -v v0.6.15
+ERR! npm -v 1.1.16
+ERR! path d:\git\NodeStorageExplorer\package.json
+ERR! code ENOENT
+ERR! message ENOENT, open 'd:\git\NodeStorageExplorer\package.json'
+ERR! errno {}
+verbose exit [ 1, true ]
