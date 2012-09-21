@@ -157,11 +157,11 @@
     </script>
 
     <script id="tableSearch-template" type="text/x-handlebars-template">
-      <h3>{{table}} Table Entities</h3>
       <div style="float:right">
         <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'><i class="icon-trash icon-white"></i></a> 
         <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-refresh"></i></a>
       </div>
+      <h3>{{table}} Table Entities</h3>
       <div class="controls">
         <div class="input-append">
           <input id="searchText" value="{{query}}" class="span4" size="16" type="text"/><button href="javascript:void(0);" class="btn" onclick="app_router.table('{{table}}', $('#searchText').val());" >Query</button>
@@ -253,12 +253,11 @@
     </script>
 
     <script id="queueDetails-template" type="text/x-handlebars-template">
-      <h3>{{name}} Queue Details</h3>
-
       <div style="float:right">
         <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')"><i class="icon-trash icon-white"></i></a>
         <a href="javascript:void(0);" class="btn" onclick='app_router.queue("{{name}}");'><i class="icon-refresh"></i></a>
       </div>
+      <h3>{{name}} Queue Details</h3>
 
       Approximate message count = {{details.approximatemessagecount}}<br/>
     </script>
