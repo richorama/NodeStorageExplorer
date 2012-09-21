@@ -90,6 +90,9 @@
 
     <script id="table-template" type="text/x-handlebars-template">
       <h2>Table Storage</h2>
+      <div style="float:right" style="float:right" class="controls"><div class="input-append">
+        <input id="tableName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createTable($('#tableName').val());" class="btn btn-primary">Create Table</a>
+      </div></div>
       <div class="row">
         <div class="span2" id="tableList">
 
@@ -106,10 +109,13 @@
     </script>
 
     <script id="tableList-template" type="text/x-handlebars-template">
+
       <div style="float:right">
         <a href="javascript:void(0);" onclick='app_router.tables();'>Reload</a>
       </div> 
       <h3>Tables</h3>
+
+
       <ul class="nav nav-tabs nav-stacked">
         {{#each tables}}
         <li><a href="#tables/{{this.TableName}}">{{this.TableName}}</a></li>
@@ -400,6 +406,12 @@ var AppRouter = Backbone.Router.extend({
       Two10.view(Two10.Templates.entityTemplate, {entities:data}, "#entities");
     });
   },
+  createTable: function(tableName){
+    Two10.post("/tables/" + tableName, {}, function(response){
+      $('#tableName').val("");
+      app_router.tables();
+    });
+  },  
   containers: function(){
     Two10.view(Two10.Templates.blobTemplate, {}, "#content");  
     Two10.view(Two10.Templates.loadingTemplate, {}, "#containerList");       

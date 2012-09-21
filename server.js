@@ -15,6 +15,19 @@ app.get('/tables', function(req, res){
 	});
 });
 
+app.post('/tables/:table',function(req, res){
+	var tableService = azure.createTableService(req.headers.account, req.headers.key);
+	tableService.createTableIfNotExists(req.params.table, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.error(error);
+	    	res.json({result:error});
+	    }
+	});
+});
+
 app.get('/tables/:table/:query?', function(req, res){
 	var tableService = azure.createTableService(req.headers.account, req.headers.key);
 	var query = azure.TableQuery.select().from(req.params.table)
