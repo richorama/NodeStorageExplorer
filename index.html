@@ -159,7 +159,7 @@
     <script id="tableSearch-template" type="text/x-handlebars-template">
       <h3>{{table}} Table Entities</h3>
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'>Delete</a> 
+        <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'><i class="icon-trash icon-white"></i></a> 
         <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-refresh"></i></a>
       </div>
       <div class="controls">
@@ -198,6 +198,7 @@
 
     <script id="blobList-template" type="text/x-handlebars-template">
       <div style="float:right">
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteContainer('{{container}}')"><i class="icon-trash icon-white"></i></a>
         <a href="javascript:void(0);" class="btn" onclick="app_router.container('{{container}}');"><i class="icon-refresh"></i></a>
       </div>      
       <h3>{{container}} Blobs</h3>
@@ -253,8 +254,13 @@
 
     <script id="queueDetails-template" type="text/x-handlebars-template">
       <h3>{{name}} Queue Details</h3>
-      Approximate message count = {{details.approximatemessagecount}}<br/><br/><br/>
-      <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')">Delete Queue</a>
+
+      <div style="float:right">
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')"><i class="icon-trash icon-white"></i></a>
+        <a href="javascript:void(0);" class="btn" onclick='app_router.queue("{{name}}");'><i class="icon-refresh"></i></a>
+      </div>
+
+      Approximate message count = {{details.approximatemessagecount}}<br/>
     </script>
 
     <script>
@@ -365,7 +371,7 @@ Handlebars.registerHelper('entity', function(items, options) {
       out = out + "</tr>";      
     }
 
-    out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'>Delete</a></td>";
+    out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'><i class='icon-trash'></i></a></td>";
 
     for(var prop in item){
       if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated") {
@@ -497,6 +503,12 @@ var AppRouter = Backbone.Router.extend({
     Two10.activateMenu("table");    
     Two10.delete("/tables/" + tablename, function(response){
       app_router.tables();
+    });
+  },
+  deleteContainer: function(containername){
+    Two10.activateMenu("blob");    
+    Two10.delete("/containers/" + containername, function(response){
+      app_router.containers();
     });
   }
 
