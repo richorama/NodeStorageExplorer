@@ -58,11 +58,11 @@
           <a class="brand" href="#">NodeStorageExplorer</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#login">Login</a></li>
-              <li><a href="#tables">Tables</a></li>
-              <li><a href="#containers">Blobs</a></li>
-              <li><a href="#queues">Queues</a></li>
+              <li class="menu active" id="homeMenu"><a href="#"><i class="icon-home"></i> Home</a></li>
+              <li class="menu" id="loginMenu"><a href="#login"><i class="icon-user"></i> Login</a></li>
+              <li class="menu" id="tableMenu"><a href="#tables"><i class="icon-list-alt"></i> Tables</a></li>
+              <li class="menu" id="blobMenu"><a href="#containers"><i class="icon-file"></i> Blobs</a></li>
+              <li class="menu" id="queueMenu"><a href="#queues"><i class="icon-envelope"></i> Queues</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -125,7 +125,7 @@
     <script id="tableList-template" type="text/x-handlebars-template">
 
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.tables();'><i class="icon-repeat"></i></a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.tables();'><i class="icon-refresh"></i></a>
       </div> 
       <h3>Tables</h3>
 
@@ -160,7 +160,7 @@
       <h3>{{table}} Table Entities</h3>
       <div style="float:right">
         <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'>Delete</a> 
-        <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-repeat"></i></a>
+        <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-refresh"></i></a>
       </div>
       <div class="controls">
         <div class="input-append">
@@ -186,7 +186,7 @@
 
     <script id="containerList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.containers();'><i class="icon-repeat"></i></a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.containers();'><i class="icon-refresh"></i></a>
       </div>      
       <h3>Containers</h3>
       <ul class="nav nav-tabs nav-stacked">
@@ -198,7 +198,7 @@
 
     <script id="blobList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn" onclick="app_router.container('{{container}}');"><i class="icon-repeat"></i></a>
+        <a href="javascript:void(0);" class="btn" onclick="app_router.container('{{container}}');"><i class="icon-refresh"></i></a>
       </div>      
       <h3>{{container}} Blobs</h3>
 
@@ -241,7 +241,7 @@
 
     <script id="queueList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.queues();'><i class="icon-repeat"></i></a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.queues();'><i class="icon-refresh"></i></a>
       </div>      
       <h3>Queues</h3>
       <ul class="nav nav-tabs nav-stacked">
@@ -312,6 +312,10 @@ this.Two10 = new function() {
     $(target).html(template(data));
   }
 
+  this.activateMenu = function(section){
+    $(".menu").removeClass("active");
+    $("#" + section + "Menu").addClass("active");
+  }
 
   this.Templates = new function(){
 
@@ -393,6 +397,7 @@ var AppRouter = Backbone.Router.extend({
     "*actions": "home"
   },
   login:function(){
+    Two10.activateMenu("login");
     if (localStorage){
       $("#storageAccount").val(localStorage.getItem("account"));
       $("#storageKey").val(localStorage.getItem("key"));
@@ -401,6 +406,7 @@ var AppRouter = Backbone.Router.extend({
     $('#loginModal').modal({backdrop:"static", keyboard:false});
   },
   tables: function(){
+    Two10.activateMenu("table");
     Two10.view(Two10.Templates.tableTemplate, {}, "#content");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#tableList");    
     Two10.query("/tables/", function(data){
@@ -408,6 +414,7 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   table: function(table, query){
+    Two10.activateMenu("table");
     context.lastTable = table;
     Two10.view(Two10.Templates.tableSearchTemplate, {table:table, query:query}, "#tableSearch");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#entities");
@@ -421,12 +428,14 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   createTable: function(tableName){
+    Two10.activateMenu("table");
     Two10.post("/tables/" + tableName, {}, function(response){
       $('#tableName').val("");
       app_router.tables();
     });
   },  
   containers: function(){
+    Two10.activateMenu("blob");
     Two10.view(Two10.Templates.blobTemplate, {}, "#content");  
     Two10.view(Two10.Templates.loadingTemplate, {}, "#containerList");       
     Two10.query("/containers/", function(data){
@@ -434,15 +443,18 @@ var AppRouter = Backbone.Router.extend({
     });  
   },
   container: function(container){
+    Two10.activateMenu("blob");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#blobList");       
     Two10.query("/containers/" + container, function(data){
       Two10.view(Two10.Templates.blobListTemplate, {blobs:data, container:container}, "#blobList");
     });  
   },
   home:function(){
+    Two10.activateMenu("home");
     Two10.view(Two10.Templates.homeTemplate, {}, "#content");
   },
   queues: function(){
+    Two10.activateMenu("queue");
     Two10.view(Two10.Templates.queueTemplate, {}, "#content");  
     Two10.view(Two10.Templates.loadingTemplate, {}, "#queueList");       
     Two10.query("/queues/", function(data){
@@ -450,12 +462,14 @@ var AppRouter = Backbone.Router.extend({
     });  
   },  
   queue: function(queue){
+    Two10.activateMenu("queue");
     Two10.view(Two10.Templates.loadingTemplate, {}, "#queueDetails");       
     Two10.query("/queues/" + queue, function(data){
       Two10.view(Two10.Templates.queueDetailsTemplate, {details:data, name:queue}, "#queueDetails");
     });  
   },
   createQueue: function(queueName){
+    Two10.activateMenu("queue");
     Two10.post("/queues/" + queueName, {}, function(response){
       Two10.query("/queues/", function(data){
         Two10.view(Two10.Templates.queueListTemplate, {queues:data}, "#queueList");
@@ -464,6 +478,7 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   deleteQueue: function(queueName){
+    Two10.activateMenu("queue");
     Two10.view(Two10.Templates.emptyTemplate, {}, "#queueDetails");
     Two10.delete("/queues/" + queueName, function(response){
       Two10.query("/queues/", function(data){
@@ -472,12 +487,14 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   deleteEntity: function(tablename, pk, rk){
+    Two10.activateMenu("table");
     Two10.delete("/entities/" + tablename + "/" + pk + "/" + rk, function(response){
       $("#" + pk + "-" + rk).remove();
 
     });
   },
   deleteTable: function(tablename){
+    Two10.activateMenu("table");    
     Two10.delete("/tables/" + tablename, function(response){
       app_router.tables();
     });
