@@ -21,6 +21,20 @@
 	      body {
 	        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 	      }
+        h2 {
+          font-weight: normal;
+          color:gray;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+        }
+        h3 {
+          font-weight: normal;
+          color:gray;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+        }
+        .vertOffset
+        {
+          margin-top: 13px;
+        }
 	    </style>
 
 		  
@@ -111,7 +125,7 @@
     <script id="tableList-template" type="text/x-handlebars-template">
 
       <div style="float:right">
-        <a href="javascript:void(0);" onclick='app_router.tables();'>Reload</a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.tables();'><i class="icon-repeat"></i></a>
       </div> 
       <h3>Tables</h3>
 
@@ -143,10 +157,10 @@
     </script>
 
     <script id="tableSearch-template" type="text/x-handlebars-template">
-      <h3>{{table}} Entities</h3>
+      <h3>{{table}} Table Entities</h3>
       <div style="float:right">
         <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'>Delete</a> 
-        <a href="javascript:void(0);" onclick='app_router.table("{{table}}","{{query}}");'>Reload</a>
+        <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-repeat"></i></a>
       </div>
       <div class="controls">
         <div class="input-append">
@@ -172,7 +186,7 @@
 
     <script id="containerList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" onclick='app_router.containers();'>Reload</a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.containers();'><i class="icon-repeat"></i></a>
       </div>      
       <h3>Containers</h3>
       <ul class="nav nav-tabs nav-stacked">
@@ -184,7 +198,7 @@
 
     <script id="blobList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" onclick="app_router.container('{{container}}');">Reload</a>
+        <a href="javascript:void(0);" class="btn" onclick="app_router.container('{{container}}');"><i class="icon-repeat"></i></a>
       </div>      
       <h3>{{container}} Blobs</h3>
 
@@ -227,7 +241,7 @@
 
     <script id="queueList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" onclick='app_router.queues();'>Reload</a>
+        <a href="javascript:void(0);" class="btn vertOffset" onclick='app_router.queues();'><i class="icon-repeat"></i></a>
       </div>      
       <h3>Queues</h3>
       <ul class="nav nav-tabs nav-stacked">
@@ -238,8 +252,8 @@
     </script>
 
     <script id="queueDetails-template" type="text/x-handlebars-template">
-      <h3>{{name}} Details</h3>
-      Approximate message count = {{details.approximatemessagecount}}<br/>
+      <h3>{{name}} Queue Details</h3>
+      Approximate message count = {{details.approximatemessagecount}}<br/><br/><br/>
       <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')">Delete Queue</a>
     </script>
 
