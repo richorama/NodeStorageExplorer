@@ -147,5 +147,17 @@ app.delete('/containers/:container',function(req, res){
 	});
 });
 
+app.post('/containers/:container',function(req, res){
+	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
+	blobService.createContainerIfNotExists(req.params.container, function(error){
+	    if(!error){
+	        res.json({result:"ok"});
+	    }
+	    else{
+	    	console.error(error);
+	    	res.json({result:error});
+	    }
+	});
+});
 
 app.listen(process.env.port || 210);

@@ -172,6 +172,9 @@
 
     <script id="blob-template" type="text/x-handlebars-template">
       <h2>Blob Storage</h2>
+      <div style="float:right" style="float:right" class="controls"><div class="input-append">
+        <input id="containerName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createContainer($('#containerName').val());" class="btn btn-primary">Create Container</a>
+      </div></div>      
       <div class="row">
         <div class="span2" id="containerList">
 
@@ -507,6 +510,13 @@ var AppRouter = Backbone.Router.extend({
   deleteContainer: function(containername){
     Two10.activateMenu("blob");    
     Two10.delete("/containers/" + containername, function(response){
+      app_router.containers();
+    });
+  },
+  createContainer: function(containername){
+    Two10.activateMenu("blob");    
+    Two10.post("/containers/" + containername, {}, function(response){
+      $('#containerName').val("");
       app_router.containers();
     });
   }
