@@ -1,5 +1,5 @@
 var azure = require('azure')
-var app = require('express').createServer();
+var app = require('express')();
 
 app.get('/', function(req, res){
 	res.sendfile('index.html');
