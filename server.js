@@ -161,3 +161,4 @@ app.post('/containers/:container',function(req, res){
 });
 
 app.listen(process.env.port || 210);
+console.log("listening on port " + (process.env.port || 210));
