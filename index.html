@@ -7,20 +7,16 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 
-      <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-      <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+      <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
       <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-      <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
-      <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+      <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
       <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
       <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
       <script src="http://cloud.github.com/downloads/wycats/handlebars.js/handlebars-1.0.0.beta.6.js"></script>
             
 
       <style>
-	      body {
-	        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-	      }
+	
         h2 {
           font-weight: normal;
           color:gray;
@@ -47,26 +43,22 @@
 
   	<body>
 
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">NodeStorageExplorer</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="menu active" id="homeMenu"><a href="#"><i class="icon-home"></i> Home</a></li>
-              <li class="menu" id="loginMenu"><a href="#login"><i class="icon-user"></i> Login</a></li>
-              <li class="menu" id="tableMenu"><a href="#tables"><i class="icon-list-alt"></i> Tables</a></li>
-              <li class="menu" id="blobMenu"><a href="#containers"><i class="icon-file"></i> Blobs</a></li>
-              <li class="menu" id="queueMenu"><a href="#queues"><i class="icon-envelope"></i> Queues</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+    <div class="container">
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+          <a class="navbar-brand" href="#">NodeStorageExplorer</a>
         </div>
-      </div>
+        <div class="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="menu active" id="homeMenu"><a href="#"><i class="icon-home"></i> Home</a></li>
+            <li class="menu" id="loginMenu"><a href="#login"><i class="icon-user"></i> Login</a></li>
+            <li class="menu" id="tableMenu"><a href="#tables"><i class="icon-list-alt"></i> Tables</a></li>
+            <li class="menu" id="blobMenu"><a href="#containers"><i class="icon-file"></i> Blobs</a></li>
+            <li class="menu" id="queueMenu"><a href="#queues"><i class="icon-envelope"></i> Queues</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </nav>
     </div>
 
     <div class="container">
@@ -74,48 +66,55 @@
     </div> <!-- /container -->
 
 
-    <div class="modal fade" id="loginModal" style="display:none">
-      <div class="modal-header">
-        <h3>Enter Your Windows Azure Storage Account and Key</h3>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal">
-          <div class="control-group">
+    <div class="modal fade" id="loginModal" id="loginModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Enter Your Windows Azure Storage Account and Key</h4>
+          </div>
+          <div class="modal-body">
+                        
+                        <div class="control-group">
             <label class="control-label" for="storageAccount">Storage Account</label>
             <div class="controls">
-              <input type="text" id="storageAccount" class="input-x-large" style="margin-bottom: 0px;">
+              <input type="text" id="storageAccount" class="form-control" style="margin-bottom: 0px;">
             </div>
           </div>
           <div class="control-group">
             <label class="control-label" for="storageKey">Storage Key</label>
             <div class="controls">
-              <input type="password" id="storageKey" class="input-x-large" style="margin-bottom: 0px;">
+              <input type="password" id="storageKey" class="form-control" style="margin-bottom: 0px;">
             </div>
           </div>
-          <div class="control-group">
-            <label class="control-label" for="storageKey"></label>
-            <div class="controls">
-              <a href="javascript:void(0);" class="btn btn-primary" onclick="Two10.login();">Login</a>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+        <div class="modal-footer">
+          <a href="javascript:void(0);" class="btn btn-primary" onclick="Two10.login();">Login</a>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+    
 
     <script id="table-template" type="text/x-handlebars-template">
       <h2>Table Storage</h2>
-      <div style="float:right" style="float:right" class="controls"><div class="input-append">
-        <input id="tableName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createTable($('#tableName').val());" class="btn btn-primary">Create Table</a>
-      </div></div>
+      <div style="float:right" style="float:right" class="form-inline"><div class="input-append">
+      <div class="form-group">
+        <input id="tableName" value="" class="form-control" size="16" type="text"/>
+      </div>
+      <div class="form-group">
+        <a href="javascript:void(0);" onclick="app_router.createTable($('#tableName').val());" class="btn btn-primary">Create Table</a>
+      </div></div></div>
       <div class="row">
-        <div class="span2" id="tableList">
+        <div class="col-md-2" id="tableList">
 
         </div>
-        <div class="span10">
+        <div class="col-md-10">
           <div id="tableSearch">
             
           </div>
-          <div id="entities">
+          <div id="entities" class="col-md-10">
 
           </div>
         </div>
@@ -158,13 +157,13 @@
 
     <script id="tableSearch-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'><i class="icon-trash icon-white"></i></a> 
+        <a href="javascript:void(0);" class="btn btn-danger" onclick='app_router.deleteTable("{{table}}");'><i class="glyphicon glyphicon-trash"></i></a> 
         <a href="javascript:void(0);" class="btn" onclick='app_router.table("{{table}}","{{query}}");'><i class="icon-refresh"></i></a>
       </div>
       <h3>{{table}} Table Entities</h3>
       <div class="controls">
         <div class="input-append">
-          <input id="searchText" value="{{query}}" class="span4" size="16" type="text"/><button href="javascript:void(0);" class="btn" onclick="app_router.table('{{table}}', $('#searchText').val());" >Query</button>
+          <input id="searchText" value="{{query}}" class="col-md-4" size="16" type="text"/><button href="javascript:void(0);" class="btn" onclick="app_router.table('{{table}}', $('#searchText').val());" >Query</button>
 
         </div>
       </div>
@@ -172,14 +171,18 @@
 
     <script id="blob-template" type="text/x-handlebars-template">
       <h2>Blob Storage</h2>
-      <div style="float:right" style="float:right" class="controls"><div class="input-append">
-        <input id="containerName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createContainer($('#containerName').val());" class="btn btn-primary">Create Container</a>
+      <div style="float:right" style="float:right" class="form-inline">
+      <div class="form-group">
+        <input id="containerName" value="" class="form-control" size="16" type="text"/>
+      </div>
+      <div class="form-group">
+        <a href="javascript:void(0);" onclick="app_router.createContainer($('#containerName').val());" class="btn btn-primary">Create Container</a>
       </div></div>      
       <div class="row">
-        <div class="span2" id="containerList">
+        <div class="col-md-2" id="containerList">
 
         </div>
-        <div class="span10">
+        <div class="col-md-2">
           <div id="blobList">
 
           </div>
@@ -201,7 +204,7 @@
 
     <script id="blobList-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteContainer('{{container}}')"><i class="icon-trash icon-white"></i></a>
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteContainer('{{container}}')"><i class="glyphicon glyphicon-trash"></i></a>
         <a href="javascript:void(0);" class="btn" onclick="app_router.container('{{container}}');"><i class="icon-refresh"></i></a>
       </div>      
       <h3>{{container}} Blobs</h3>
@@ -227,15 +230,18 @@
     <script id="queue-template" type="text/x-handlebars-template">
       <div class="row">
       <h2 style="float:left; padding-right:30px;">Cloud Queues</h2>
-      <div style="float:right" style="float:right" class="controls"><div class="input-append">
-        <input id="queueName" value="" class="span2" size="16" type="text"/><a href="javascript:void(0);" onclick="app_router.createQueue($('#queueName').val());" class="btn btn-primary">Create Queue</a>
+      <div style="float:right" style="float:right" class="form-inline"><div class="form-group">
+        <input id="queueName" value="" class="form-control" size="16" type="text"/>
+        </div>
+        <div class="form-group">
+          <a href="javascript:void(0);" onclick="app_router.createQueue($('#queueName').val());" class="btn btn-primary">Create Queue</a>
       </div></div>
       </div>
       <div class="row">
-        <div class="span2" id="queueList">
+        <div class="col-md-2" id="queueList">
 
         </div>
-        <div class="span10">
+        <div class="col-md-10">
           <div id="queueDetails">
 
           </div>
@@ -257,7 +263,7 @@
 
     <script id="queueDetails-template" type="text/x-handlebars-template">
       <div style="float:right">
-        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')"><i class="icon-trash icon-white"></i></a>
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="app_router.deleteQueue('{{name}}')"><i class="glyphicon glyphicon-trash"></i></a>
         <a href="javascript:void(0);" class="btn" onclick='app_router.queue("{{name}}");'><i class="icon-refresh"></i></a>
       </div>
       <h3>{{name}} Queue Details</h3>
@@ -366,17 +372,17 @@ Handlebars.registerHelper('entity', function(items, options) {
     if (!lastitem || !compareObjects(lastitem, item)){
       out = out + "<tr><th></th>";
       for(var prop in item){
-        if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated") {
+        if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated" && prop != "_") {
           out = out + "<th>" + prop + "</th>"
         }
       }
       out = out + "</tr>";      
     }
 
-    out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'><i class='icon-trash'></i></a></td>";
+    out = out + "<tr id='" + item.PartitionKey + "-" + item.RowKey + "'><td><a href='javascript:void(0);' onclick='app_router.deleteEntity(\"" + context.lastTable + "\",\"" + item.PartitionKey + "\",\"" + item.RowKey + "\");'><i class='glyphicon glyphicon-trash'></i></a></td>";
 
     for(var prop in item){
-      if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated") {
+      if (prop != "id" && prop != "link" && prop != "etag" && prop != "updated" && prop != "_") {
         out = out + "<td>" + item[prop] + "</td>"
       }
     }
