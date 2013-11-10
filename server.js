@@ -52,9 +52,20 @@ app.get('/containers', function(req, res){
 	});
 });
 
-app.get('/containers/:blob', function(req, res){
+function getDate(){
+	var date = new Date();
+	date.setHours((date).getHours() + 1);
+	return date;
+}
+
+app.get('/containers/:container', function(req, res){
 	var blobService = azure.createBlobService(req.headers.account, req.headers.key);
-	blobService.listBlobs(req.params.blob, function(error, blobs, nextMarker, response){
+	blobService.listBlobs(req.params.container, function(error, blobs, nextMarker, response){
+		
+		blobs.forEach(function(blob){
+			blob.xurl = blobService.generateSharedAccessSignature(req.params.container, blob.name, { AccessPolicy : { Permissions : "r", Expiry : getDate() } }).url();
+		});
+
 		if (error){
 			console.error(error);
 		}		
