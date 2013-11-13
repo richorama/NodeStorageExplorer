@@ -1,14 +1,9 @@
-# For security reasons, logging, dev errors, and debugging 
-# should be disabled in production deployments:
-
-loggingEnabled: false
-debuggingEnabled: false
-devErrorsEnabled: false
-node_env: production
-
-# Other settings with their default values follow.
 # For documentation see https://github.com/tjanczuk/iisnode/blob/master/src/samples/configuration/iisnode.yml
 
+loggingEnabled: true
+# debuggingEnabled: false
+# devErrorsEnabled: true
+# node_env: production
 # nodeProcessCountPerApplication: 1
 # maxConcurrentRequestsPerProcess: 1024
 # maxNamedPipeConnectionRetry: 24
@@ -18,7 +13,7 @@ node_env: production
 # asyncCompletionThreadCount: 0
 # initialRequestBufferSize: 4096
 # maxRequestBufferSize: 65536
-watchedFiles: *.*
+ watchedFiles: *.js;iisnode.yml;node_modules\*;*.html
 # uncFileChangesPollingInterval: 5000
 # gracefulShutdownTimeout: 60000
 # logDirectoryNameSuffix: logs
@@ -29,4 +24,4 @@ watchedFiles: *.*
 # logFileFlushInterval: 5000
 # flushResponse: false
 # enableXFF: false
-# promoteServerVars:  
+# promoteServerVars:   
